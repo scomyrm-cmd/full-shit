@@ -7,10 +7,10 @@ function localApi(): Plugin {
     name: 'campus-local-api',
     configureServer(server) {
       const env = loadEnv(server.config.mode, process.cwd(), '');
-      for (const key of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SCHOOL_DATA_SOURCE']) {
+      for (const key of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SCHOOL_DATA_SOURCE', 'CAMPUS_AI_DEMO_CODE']) {
         if (env[key]) process.env[key] = env[key];
       }
-      server.middlewares.use('/api/campus-ai', async (req: IncomingMessage, res: ServerResponse) => {
+      server.middlewares.use('/api/ai', async (req: IncomingMessage, res: ServerResponse) => {
         try {
           const chunks: Buffer[] = []; let size = 0;
           for await (const chunk of req) {
@@ -18,13 +18,13 @@ function localApi(): Plugin {
             if (size > 2097152) { res.writeHead(413, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: { code: 'request_too_large' } })); return; }
             chunks.push(chunk);
           }
-          const request = new Request('http://localhost/api/campus-ai', {
+          const request = new Request('http://localhost/api/ai', {
             method: req.method,
             headers: Object.entries(req.headers).filter(([,v]) => typeof v === 'string') as [string,string][],
             body: ['GET','HEAD'].includes(req.method || 'GET') ? undefined : Buffer.concat(chunks).toString(),
           });
-          const mod = await server.ssrLoadModule('/netlify/functions/campus-ai.mts');
-          const response: Response = await mod.default(request);
+          const mod = await server.ssrLoadModule('/api/ai.ts');
+          const response: Response = await mod.handleCampusAI(request);
           res.writeHead(response.status, Object.fromEntries(response.headers));
           res.end(await response.text());
         } catch {

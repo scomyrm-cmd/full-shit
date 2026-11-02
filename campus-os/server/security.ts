@@ -37,7 +37,7 @@ export async function readLimitedBody(request:Request,max=2097152){
 // replace it with Supabase Auth before real use. Demo access can only use the minimized local snapshot.
 export interface AccessResult { id:string; demo:boolean }
 const safeEqual=(a:string,b:string)=>{if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0;};
-export const clientIp=(request:Request)=>request.headers.get('x-nf-client-connection-ip')||request.headers.get('x-forwarded-for')?.split(',')[0].trim()||'unknown';
+export const clientIp=(request:Request)=>request.headers.get('x-vercel-forwarded-for')?.split(',')[0].trim()||request.headers.get('x-forwarded-for')?.split(',')[0].trim()||'unknown';
 export const demoEnabled=(env:ServerEnvironment)=>(env.CAMPUS_AI_DEMO_CODE||'').length>=8;
 export function demoCodeMatches(request:Request,env:ServerEnvironment){const sent=request.headers.get('x-campus-demo-code')||'';return demoEnabled(env)&&sent.length>0&&safeEqual(sent,env.CAMPUS_AI_DEMO_CODE!);}
 export async function verifyAccess(request:Request,env:ServerEnvironment,fetcher:typeof fetch=fetch):Promise<AccessResult>{

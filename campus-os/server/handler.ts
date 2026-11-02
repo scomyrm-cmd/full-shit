@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { snapshotSchema } from '../../shared/analytics.ts';
-import { ApiError, verifyAdministrator, verifyAccess, demoCodeMatches, demoEnabled, clientIp, rateLimit, readLimitedBody, type ServerEnvironment } from '../../server/security.ts';
-import { askGemini } from '../../server/gemini.ts';
-import { supabaseSnapshot } from '../../server/supabaseProvider.ts';
+import { snapshotSchema } from '../shared/analytics.ts';
+import { ApiError, verifyAdministrator, verifyAccess, demoCodeMatches, demoEnabled, clientIp, rateLimit, readLimitedBody, type ServerEnvironment } from './security.ts';
+import { askGemini } from './gemini.ts';
+import { supabaseSnapshot } from './supabaseProvider.ts';
 const requestSchema=z.object({messages:z.array(z.object({role:z.enum(['user','assistant']),content:z.string().min(1).max(4000)}).strict()).min(1).max(24),language:z.enum(['en','fr','ar']),snapshot:snapshotSchema.optional(),preferences:z.object({demographics:z.boolean(),itemDescriptions:z.boolean(),activity:z.boolean()}).strict()}).strict().refine(v=>v.messages[v.messages.length-1].role==='user').refine(v=>v.messages.reduce((n,m)=>n+m.content.length,0)<=24000);
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export function createCampusAIHandler(env:ServerEnvironment=process.env,fetcher:typeof fetch=fetch){
@@ -23,5 +23,4 @@ export function createCampusAIHandler(env:ServerEnvironment=process.env,fetcher:
   }catch(error){if(error instanceof ApiError)return json({error:{code:error.code}},error.status);return json({error:{code:'server_error'}},500);}
  };
 }
-export default createCampusAIHandler();
-export const config={path:'/api/campus-ai',method:['GET','POST']};
+

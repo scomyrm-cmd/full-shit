@@ -16,8 +16,9 @@ This workspace started empty. After you selected a fresh implementation, all fil
 - `docs/test-results.json`
 - `e2e/app.spec.ts`
 - `index.html`
-- `netlify/functions/campus-ai.mts`
-- `netlify.toml`
+- `api/ai.ts`
+- `server/handler.ts`
+- `vercel.json`
 - `package-lock.json`
 - `package.json`
 - `playwright.config.ts`

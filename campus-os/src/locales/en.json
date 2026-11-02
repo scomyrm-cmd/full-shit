@@ -479,7 +479,7 @@
   "ai.disabledDescription": "Enable the assistant in AI settings. Local search and measured reports remain available.",
   "ai.openSettings": "Open AI settings",
   "ai.setupChecklist": "Server setup required",
-  "ai.setupGemini": "Set GEMINI_API_KEY and GEMINI_MODEL on Netlify.",
+  "ai.setupGemini": "Set GEMINI_API_KEY and GEMINI_MODEL in Vercel.",
   "ai.setupAuth": "Set CAMPUS_AI_DEMO_CODE for a private demo, or connect Supabase Auth to verify the administrator role server-side.",
   "ai.dataSnapshot": "Your live school data",
   "ai.dataHint": "Counts are calculated locally. Only enabled, minimized summaries can be sent to Gemini.",
@@ -556,13 +556,13 @@
   "app.loadError": "Local data could not be loaded. Your records have not been reset. Check that browser storage is available, then reload.",
   "app.reload": "Reload workspace",
   "app.notFound": "This page could not be found.",
-  "settings.netlifyDocs": "Netlify documentation",
   "common.none": "None",
   "ai.demoTitle": "Private demo access",
-  "ai.demoDescription": "Enter the access code you set in Netlify (CAMPUS_AI_DEMO_CODE) to unlock Campus AI in this browser tab. This is a temporary demo gate, not full authentication.",
+  "ai.demoDescription": "Enter the access code you set in Vercel (CAMPUS_AI_DEMO_CODE) to unlock Campus AI in this browser tab. This is a temporary demo gate, not full authentication.",
   "ai.demoPlaceholder": "Access code",
   "ai.demoUnlock": "Unlock",
   "ai.demoUnlocked": "Demo access unlocked for this tab.",
   "ai.demoLock": "Lock",
-  "ai.demoWrong": "That code was not accepted."
+  "ai.demoWrong": "That code was not accepted.",
+  "settings.vercelDocs": "Vercel documentation"
 }
