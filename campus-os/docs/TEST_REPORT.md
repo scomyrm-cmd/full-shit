@@ -1,56 +1,52 @@
 # Campus OS — verification report
 
-Verified on 31 October 2026 in the delivery workspace.
+## Migration branch verification
 
-## Results
+The Vercel migration branch was verified by GitHub Actions on 2 November 2026.
 
 | Check | Result |
 |---|---|
-| Strict TypeScript check | Passed |
-| Production Vite build (`dist/`) | Passed |
-| Unit/repository/analytics/privacy/API tests | **25 passed** |
-| Chromium end-to-end scenarios | **11 passed** |
-| Translation coverage | **559 keys × EN/FR/AR**, parity audit passed |
-| Dependency audit (`npm audit --audit-level=high`) | **0 vulnerabilities** at delivery |
-| Original pre-migration Netlify handler bundle | Passed in the earlier delivery workspace; this does not verify the new Vercel adapter |
-| Production-build browser/deep-link/lazy AI check | Passed; no runtime errors |
-| Provider-key scan of deliverable source | No exposed provider key found |
+| Dependency installation (`npm ci`) | Passed |
+| Production TypeScript/Vite build (`npm run build`) | Passed |
+| Automated tests (`npm test`) | Passed |
+| EN/FR/AR translation parity (`npm run check:i18n`) | Passed |
+| GitHub Actions workflow | **Successful** — run 4 |
 
-The production build emits non-failing upstream Zod comment-annotation warnings; the build completes successfully.
+Workflow: https://github.com/scomyrm-cmd/full-shit/actions/runs/41539906554
 
-## Browser scenarios covered
+This CI run verifies the Vercel migration branch at commit `e8b2e66de6faf3ac5ebf6e6c95845df4ee359048`. It confirms that the Vercel adapter compiles and the repository's automated test and translation checks pass.
 
-1. Protected URL redirect, incorrect credentials, empty dashboard, refresh persistence and logout.
-2. Student required-field validation, profile, editing, duplicate ID prevention, persistence and confirmed deletion.
-3. Attendance reason validation, absent-to-present upsert without duplicates, history, reports, PDF export and live dashboard totals.
-4. Lost/found creation, claim collection details, status filtering, archive and confirmed deletion.
-5. Administrator image upload/preview, display name/role persistence across sidebar/header/settings, refresh and unchanged demo credentials.
-6. French and Arabic page navigation, actual RTL sidebar geometry, dark theme, mobile menu and horizontal-overflow check.
-7. Local global search opening a student, activity type filtering, CSV export and notification read state.
-8. Honest AI setup state, no fabricated assistant reply, empty measured report state and disabled empty PDF export.
-9. School information, notification preferences, regional formats and private backup persistence/download.
-10. AI identifier redaction, new conversation and confirmed history clearing.
-11. Arabic PDF download with bundled Arabic font and valid PDF output.
+## Existing application test coverage
 
-Each browser test also checks for uncaught page runtime errors. Test records exist only inside isolated test browser contexts and are never seeded into the delivered application.
+The earlier delivery workspace reported the following checks before the Vercel migration:
 
-## Not claimed / not yet connected
+| Check | Earlier result |
+|---|---|
+| Strict TypeScript check and Vite production build | Passed |
+| Unit/repository/analytics/privacy/API tests | 25 passed |
+| Chromium end-to-end scenarios | 11 passed |
+| Translation coverage | 559 keys × EN/FR/AR; parity audit passed |
+| Dependency audit | 0 vulnerabilities at that earlier delivery |
 
-- **Live Gemini responses were not tested:** no replacement secret key or verified administrator session was configured. Tests explicitly mock the provider protocol, authentication responses, tool loop and errors; the running app never uses those mocks.
-- The new Vercel `api/ai.ts` adapter has not yet passed a production TypeScript/build run in this environment; dependency installation timed out. GitHub Actions is configured to run build, unit tests and i18n checks on pushes/PRs.
-- Vercel hosting was not deployed from this workspace. The pre-migration Netlify handler was previously bundled and exercised locally, but the new Vercel adapter still requires CI/build verification.
+The detailed browser scenarios and earlier test environment are historical results, not a claim that all 11 browser scenarios were rerun against the Vercel deployment.
+
+## Not yet verified
+
+- **Live Gemini responses have not been tested.** A valid server-side `GEMINI_API_KEY`, the correct Vercel environment configuration, and a verified administrator session are required.
+- **A live Vercel deployment and the deployed `/api/ai` endpoint have not been tested from this repository.** Deploy the merged code, then inspect Vercel Function logs and test the endpoint.
 - Supabase was not connected and the optional SQL migration was not applied to a live project.
 - Mobile checks use Chromium viewport emulation, not physical iOS/Android devices.
-- The temporary login is not production security. See `SECURITY.md`.
+- The temporary login is not production security. Do not use real student data until real authentication and authorization are configured; see `SECURITY.md`.
 
-## Reproduce
+## Reproduce locally
+
+From the `campus-os` directory:
 
 ```bash
 npm ci
-npm run check:i18n
-npm test
 npm run build
-npx playwright install --with-deps chromium
-npm run test:e2e
-npm audit --audit-level=high
+npm test
+npm run check:i18n
 ```
+
+For browser end-to-end tests, install Chromium with `npx playwright install --with-deps chromium`, then run `npm run test:e2e`.
