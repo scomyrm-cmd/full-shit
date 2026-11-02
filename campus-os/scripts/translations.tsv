@@ -480,7 +480,7 @@ ai.disabledTitle	Campus AI is turned off	Campus AI est désactivé	Campus AI م�
 ai.disabledDescription	Enable the assistant in AI settings. Local search and measured reports remain available.	Activez l’assistant dans les paramètres IA. La recherche locale et les rapports restent disponibles.	فعّل المساعد في إعدادات الذكاء الاصطناعي. يبقى البحث المحلي والتقارير المتاحة متاحين.
 ai.openSettings	Open AI settings	Ouvrir les paramètres IA	فتح إعدادات الذكاء الاصطناعي
 ai.setupChecklist	Server setup required	Configuration serveur requise	مطلوب إعداد الخادم
-ai.setupGemini	Set GEMINI_API_KEY and GEMINI_MODEL on Netlify.	Définissez GEMINI_API_KEY et GEMINI_MODEL sur Netlify.	عيّن GEMINI_API_KEY وGEMINI_MODEL على Netlify.
+ai.setupGemini	Set GEMINI_API_KEY and GEMINI_MODEL in Vercel.	Définissez GEMINI_API_KEY et GEMINI_MODEL dans Vercel.	عيّن GEMINI_API_KEY وGEMINI_MODEL في Vercel.
 ai.setupAuth	Set CAMPUS_AI_DEMO_CODE for a private demo, or connect Supabase Auth to verify the administrator role server-side.	Définissez CAMPUS_AI_DEMO_CODE pour une démo privée, ou connectez Supabase Auth pour vérifier le rôle administrateur côté serveur.	عيّن CAMPUS_AI_DEMO_CODE لعرض تجريبي خاص، أو اربط Supabase Auth للتحقق من دور المسؤول على الخادم.
 ai.dataSnapshot	Your live school data	Vos données scolaires en direct	بيانات مدرستك المباشرة
 ai.dataHint	Counts are calculated locally. Only enabled, minimized summaries can be sent to Gemini.	Les compteurs sont calculés localement. Seuls les résumés autorisés et minimisés peuvent être envoyés à Gemini.	تُحسب الأعداد محليًا. يمكن إرسال الملخصات المفعّلة والمختصرة فقط إلى Gemini.
@@ -557,10 +557,10 @@ settings.defaultAttendanceView	Default attendance view	Vue de présence par déf
 app.loadError	Local data could not be loaded. Your records have not been reset. Check that browser storage is available, then reload.	Impossible de charger les données locales. Vos données n’ont pas été réinitialisées. Vérifiez le stockage du navigateur, puis rechargez.	تعذر تحميل البيانات المحلية. لم تتم إعادة تعيين سجلاتك. تحقق من توفر تخزين المتصفح ثم أعد التحميل.
 app.reload	Reload workspace	Recharger l’espace	إعادة تحميل مساحة العمل
 app.notFound	This page could not be found.	Cette page est introuvable.	تعذر العثور على هذه الصفحة.
-settings.netlifyDocs	Netlify documentation	Documentation Netlify	وثائق Netlify
+settings.vercelDocs	Vercel documentation	Documentation Vercel	وثائق Vercel
 common.none	None	Aucun	لا يوجد
 ai.demoTitle	Private demo access	Accès démo privé	الوصول التجريبي الخاص
-ai.demoDescription	Enter the access code you set in Netlify (CAMPUS_AI_DEMO_CODE) to unlock Campus AI in this browser tab. This is a temporary demo gate, not full authentication.	Saisissez le code d’accès défini dans Netlify (CAMPUS_AI_DEMO_CODE) pour déverrouiller Campus AI dans cet onglet. C’est une protection de démonstration temporaire, pas une authentification complète.	أدخل رمز الوصول الذي حددته في Netlify (CAMPUS_AI_DEMO_CODE) لفتح Campus AI في علامة التبويب هذه. هذه حماية تجريبية مؤقتة وليست مصادقة كاملة.
+ai.demoDescription	Enter the access code you set in Vercel (CAMPUS_AI_DEMO_CODE) to unlock Campus AI in this browser tab. This is a temporary demo gate, not full authentication.	Saisissez le code d’accès défini dans Vercel (CAMPUS_AI_DEMO_CODE) pour déverrouiller Campus AI dans cet onglet. C’est une protection de démonstration temporaire, pas une authentification complète.	أدخل رمز الوصول الذي حددته في Vercel (CAMPUS_AI_DEMO_CODE) لفتح Campus AI في علامة التبويب هذه. هذه حماية تجريبية مؤقتة وليست مصادقة كاملة.
 ai.demoPlaceholder	Access code	Code d’accès	رمز الوصول
 ai.demoUnlock	Unlock	Déverrouiller	فتح
 ai.demoUnlocked	Demo access unlocked for this tab.	Accès démo déverrouillé pour cet onglet.	تم فتح الوصول التجريبي لعلامة التبويب هذه.

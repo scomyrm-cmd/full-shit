@@ -15,7 +15,7 @@ Open the local URL printed by Vite (normally http://localhost:5173).
 **Temporary demo login:** username `admin`, password `admin`.
 These credentials are intentionally not displayed on the login screen.
 
-This is a fresh implementation, created after you selected “Build it from the specifications” because no existing project was present. It starts with **zero school records**. No student, attendance, item, activity, or notification data is seeded.
+This package preserves the existing Campus OS application and its React, TypeScript, Vite, translations, settings and school-management features. A fresh installation starts with **zero school records**; no student, attendance, item, activity, or notification data is seeded.
 
 ## What is in this ZIP?
 
@@ -28,7 +28,7 @@ This is a fresh implementation, created after you selected “Build it from the 
 - `docs/` — setup, security, architecture, test report and file manifest.
 - `.env.example` — environment variable names only; **no API key is included**.
 
-The built `dist/index.html` must be served over HTTP; do not double-click it as a `file://` page. `npm run preview` serves the built UI. The AI endpoint requires `npm run dev` locally or a Netlify deployment.
+The built `dist/index.html` must be served over HTTP; do not double-click it as a `file://` page. `npm run preview` serves the built UI. The AI endpoint requires `npm run dev` locally or a Vercel deployment.
 
 ## Campus AI: important
 

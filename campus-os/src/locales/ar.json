@@ -479,7 +479,7 @@
   "ai.disabledDescription": "فعّل المساعد في إعدادات الذكاء الاصطناعي. يبقى البحث المحلي والتقارير المتاحة متاحين.",
   "ai.openSettings": "فتح إعدادات الذكاء الاصطناعي",
   "ai.setupChecklist": "مطلوب إعداد الخادم",
-  "ai.setupGemini": "عيّن GEMINI_API_KEY وGEMINI_MODEL على Netlify.",
+  "ai.setupGemini": "عيّن GEMINI_API_KEY وGEMINI_MODEL في Vercel.",
   "ai.setupAuth": "عيّن CAMPUS_AI_DEMO_CODE لعرض تجريبي خاص، أو اربط Supabase Auth للتحقق من دور المسؤول على الخادم.",
   "ai.dataSnapshot": "بيانات مدرستك المباشرة",
   "ai.dataHint": "تُحسب الأعداد محليًا. يمكن إرسال الملخصات المفعّلة والمختصرة فقط إلى Gemini.",
@@ -556,13 +556,13 @@
   "app.loadError": "تعذر تحميل البيانات المحلية. لم تتم إعادة تعيين سجلاتك. تحقق من توفر تخزين المتصفح ثم أعد التحميل.",
   "app.reload": "إعادة تحميل مساحة العمل",
   "app.notFound": "تعذر العثور على هذه الصفحة.",
-  "settings.netlifyDocs": "وثائق Netlify",
   "common.none": "لا يوجد",
   "ai.demoTitle": "الوصول التجريبي الخاص",
-  "ai.demoDescription": "أدخل رمز الوصول الذي حددته في Netlify (CAMPUS_AI_DEMO_CODE) لفتح Campus AI في علامة التبويب هذه. هذه حماية تجريبية مؤقتة وليست مصادقة كاملة.",
+  "ai.demoDescription": "أدخل رمز الوصول الذي حددته في Vercel (CAMPUS_AI_DEMO_CODE) لفتح Campus AI في علامة التبويب هذه. هذه حماية تجريبية مؤقتة وليست مصادقة كاملة.",
   "ai.demoPlaceholder": "رمز الوصول",
   "ai.demoUnlock": "فتح",
   "ai.demoUnlocked": "تم فتح الوصول التجريبي لعلامة التبويب هذه.",
   "ai.demoLock": "قفل",
-  "ai.demoWrong": "لم يتم قبول هذا الرمز."
+  "ai.demoWrong": "لم يتم قبول هذا الرمز.",
+  "settings.vercelDocs": "وثائق Vercel"
 }

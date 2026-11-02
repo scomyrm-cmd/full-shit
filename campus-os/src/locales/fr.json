@@ -479,7 +479,7 @@
   "ai.disabledDescription": "Activez l’assistant dans les paramètres IA. La recherche locale et les rapports restent disponibles.",
   "ai.openSettings": "Ouvrir les paramètres IA",
   "ai.setupChecklist": "Configuration serveur requise",
-  "ai.setupGemini": "Définissez GEMINI_API_KEY et GEMINI_MODEL sur Netlify.",
+  "ai.setupGemini": "Définissez GEMINI_API_KEY et GEMINI_MODEL dans Vercel.",
   "ai.setupAuth": "Définissez CAMPUS_AI_DEMO_CODE pour une démo privée, ou connectez Supabase Auth pour vérifier le rôle administrateur côté serveur.",
   "ai.dataSnapshot": "Vos données scolaires en direct",
   "ai.dataHint": "Les compteurs sont calculés localement. Seuls les résumés autorisés et minimisés peuvent être envoyés à Gemini.",
@@ -556,13 +556,13 @@
   "app.loadError": "Impossible de charger les données locales. Vos données n’ont pas été réinitialisées. Vérifiez le stockage du navigateur, puis rechargez.",
   "app.reload": "Recharger l’espace",
   "app.notFound": "Cette page est introuvable.",
-  "settings.netlifyDocs": "Documentation Netlify",
   "common.none": "Aucun",
   "ai.demoTitle": "Accès démo privé",
-  "ai.demoDescription": "Saisissez le code d’accès défini dans Netlify (CAMPUS_AI_DEMO_CODE) pour déverrouiller Campus AI dans cet onglet. C’est une protection de démonstration temporaire, pas une authentification complète.",
+  "ai.demoDescription": "Saisissez le code d’accès défini dans Vercel (CAMPUS_AI_DEMO_CODE) pour déverrouiller Campus AI dans cet onglet. C’est une protection de démonstration temporaire, pas une authentification complète.",
   "ai.demoPlaceholder": "Code d’accès",
   "ai.demoUnlock": "Déverrouiller",
   "ai.demoUnlocked": "Accès démo déverrouillé pour cet onglet.",
   "ai.demoLock": "Verrouiller",
-  "ai.demoWrong": "Ce code n’a pas été accepté."
+  "ai.demoWrong": "Ce code n’a pas été accepté.",
+  "settings.vercelDocs": "Documentation Vercel"
 }

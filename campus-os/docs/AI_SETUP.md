@@ -1,10 +1,10 @@
 # Campus AI — real Gemini setup
 
-## Quick start on Netlify (private demo)
+## Quick start on Vercel (private demo)
 
-1. Push this folder to GitHub (or use the Netlify CLI) and create a Netlify site from it. Build settings come from `netlify.toml`.
-2. Netlify > Project configuration > Environment variables, add: `GEMINI_API_KEY` (your key), `GEMINI_MODEL` (`gemini-3.6-flash`, or any model your key can use), and `CAMPUS_AI_DEMO_CODE` (a long random code you invent).
-3. Trigger a new deploy, open the site, log in, open **Campus AI**, type the demo code once, and ask a question.
+1. Import the GitHub repository into Vercel and set Root Directory to `campus-os`. The checked-in `vercel.json` configures the Vite build, `dist` output, SPA fallback and security headers.
+2. In Vercel → Project → Settings → Environment Variables, add `GEMINI_API_KEY`, `GEMINI_MODEL` (for example `gemini-2.5-flash`), and `CAMPUS_AI_DEMO_CODE` (a long random code you generate).
+3. Select Preview and Production environments as needed, redeploy, open the site, log in, open **Campus AI**, enter the demo code once, and ask a question.
 
 `CAMPUS_AI_DEMO_CODE` is an interim, server-checked shared password. Only aggregated, anonymized statistics are ever sent to Gemini, but anyone who learns the code can spend your Gemini quota. Use Supabase Auth (sections below) before sharing the site widely, then delete the variable.
 
@@ -12,36 +12,39 @@
 
 The API key pasted into the conversation must be considered exposed. Revoke it in Google AI Studio and generate a replacement. No key was copied into this project, its ZIP, browser storage, or frontend environment variables.
 
-## 2. Configure Netlify environment variables
+## 2. Configure Vercel environment variables
 
-In Netlify: **Project configuration → Environment variables**. Add server-side variables, scoped to Functions/runtime (and builds only if your tooling requires it):
+In Vercel: **Project configuration → Environment variables**. Add server-side variables, scoped to Functions/runtime (and builds only if your tooling requires it):
 
 | Variable | Value |
 |---|---|
 | `GEMINI_API_KEY` | Your replacement secret key |
 | `GEMINI_MODEL` | A model available to your Google AI project, for example `gemini-2.5-flash` |
-| `SUPABASE_URL` | Your Supabase project HTTPS URL |
-| `SUPABASE_ANON_KEY` | The project's public anon key, used by the function to verify user tokens |
-| `SCHOOL_DATA_SOURCE` | `local-sanitized` initially, or `supabase` for server-side authorized queries |
+| `CAMPUS_AI_DEMO_CODE` | Optional shared demo password (8+ characters); needed for the existing demo-login workflow |
+| `SUPABASE_URL` | Optional Supabase project HTTPS URL for real Auth sessions |
+| `SUPABASE_ANON_KEY` | Optional public anon key used to verify real Supabase user tokens |
+| `SCHOOL_DATA_SOURCE` | `local-sanitized` for the demo-code path, or `supabase` for server-side authorized queries |
 
-Do not prefix Gemini variables with `VITE_`. Do not put secrets in `netlify.toml`, source code, HTML, localStorage, or `.env.example`. Redeploy after changing environment variables. Restrict secret-variable access appropriately in Netlify.
+Do not prefix Gemini variables with `VITE_`. Do not put secrets in `vercel.json`, source code, HTML, localStorage, or `.env.example`. Keep `GEMINI_API_KEY` server-only; Vercel injects it into the serverless function runtime. Select Preview and Production environments as appropriate, then redeploy after changing variables.
 
 For local backend development, copy `.env.example` to `.env`, fill server-only values, and run `npm run dev`. `.env` is gitignored and excluded from the deliverable ZIP. Vite's development middleware invokes the same function handler; secrets are not injected into the client bundle.
 
-Set the function timeout to at least 60 seconds in Netlify if your project defaults to a shorter timeout. The handler enforces its own provider deadlines.
+The function declares a 60-second maximum duration; the effective limit depends on your Vercel plan. The Gemini request has its own 45-second deadline.
 
 ## 3. Connect real administrator authentication
 
 **The temporary admin/admin login is deliberately insufficient for AI access.** It does not produce a verified bearer token. The public endpoint returns `auth_not_configured` or `unauthorized` rather than pretending the demo session is secure.
 
-Before enabling live AI:
+For the current built-in demo login, use `CAMPUS_AI_DEMO_CODE` with `SCHOOL_DATA_SOURCE=local-sanitized`. The `admin/admin` demo login is not a verified identity; the extra code is a shared demo gate, not full authentication.
+
+Before enabling production AI for real school data:
 
 1. Create a Supabase Auth project and a real administrator account.
 2. Set `app_metadata.role` to `administrator` (or `admin`) using a trusted server/admin process. Never accept a role from `user_metadata` or a frontend-supplied administrator name.
 3. Replace the isolated demo `AuthProviderAdapter` with a real Supabase Auth flow for the protected application, or add a separately verified administrator sign-in before AI use. Use `supabase.auth.signInWithPassword` or your chosen secure provider flow on the client; retain the resulting real Supabase session.
 4. Protect all internal routes with that verified session, not just the AI route.
 5. The existing `getVerifiedAccessToken()` reads a standard `sb-*-auth-token` Supabase session. If you use cookie/chunk storage or another auth provider, adapt this function to obtain its access token.
-6. The Netlify Function independently calls Supabase `/auth/v1/user` with the bearer token and checks the verified `app_metadata.role`. It never trusts a role claim supplied in the request body.
+6. The Vercel Function independently calls Supabase `/auth/v1/user` with the bearer token and checks the verified `app_metadata.role`. It never trusts a role claim supplied in the request body.
 
 The app intentionally keeps the requested temporary credentials unchanged. Real auth is a deployment integration, not a hidden automatic upgrade.
 
@@ -89,16 +92,18 @@ There are no write tools, SQL execution, JavaScript evaluation, shell commands, 
 
 ## 7. Verify after deployment
 
-1. GET `/api/campus-ai`: inspect configuration booleans; no secrets are returned.
+1. GET `/api/ai`: inspect configuration booleans; no secrets are returned.
 2. Without a verified administrator token, POST must fail.
 3. With a verified non-admin token, POST must fail.
 4. With a verified administrator and configured model/key, ask “How many students are registered?” The response should use the actual provided count, including zero.
 5. Test English, French and Arabic, a follow-up question, quota/error handling, and history clearing.
-6. Confirm the browser network request goes to `/api/campus-ai`, never directly to Google.
+6. Confirm the browser network request goes to `/api/ai`, never directly to Google.
 
 Official references:
+- https://vercel.com/docs/functions
+- https://vercel.com/docs/frameworks/frontend/vite
 - https://ai.google.dev/gemini-api/docs/generate-content/function-calling
 - https://ai.google.dev/api/generate-content
-- https://docs.netlify.com/build/functions/get-started/
+- https://docs.vercel.com/build/functions/get-started/
 - https://supabase.com/docs/guides/auth
 - https://supabase.com/docs/guides/database/postgres/row-level-security

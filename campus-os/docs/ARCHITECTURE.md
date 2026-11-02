@@ -25,7 +25,7 @@ To integrate Supabase writes, implement the same repository boundary with authen
 
 `LocalAIContextAdapter` projects local records into a strict, minimized `SchoolSnapshot`. `redactPersonal` sanitizes chat text before persistence/transmission. `requestAI` sends only a real Supabase access token, never the demo session.
 
-`netlify/functions/campus-ai.mts` is the deployment entry point. `server/security.ts` verifies the token with Supabase and enforces request/rate limits. `server/gemini.ts` calls the official REST `generateContent` endpoint and handles allowlisted function calls. `server/supabaseProvider.ts` is the optional authoritative server-read source.
+`api/ai.ts` is the Vercel Node.js Serverless Function entry point; `server/handler.ts` contains the provider-agnostic request handler. `server/security.ts` verifies the token with Supabase and enforces request/rate limits. `server/gemini.ts` calls the official REST `generateContent` endpoint and handles allowlisted function calls. `server/supabaseProvider.ts` is the optional authoritative server-read source.
 
 The same handler is invoked by Vite development middleware. No provider key reaches frontend code. The running application has no mock AI fallback. Mock fetch implementations exist only in tests.
 
@@ -44,4 +44,4 @@ Keep all three resource files at identical key coverage. Use translation keys fo
 
 The demo is intended for a single trusted browser/device, not concurrent multi-administrator production use. localStorage has a small quota and no encryption or conflict resolution. Uploaded images are resized; large datasets should move to Supabase. AI snapshots cover the latest 365 days and explicitly mark truncation. The serverless rate limiter is per-instance.
 
-`dist/` is compiled HTML/CSS/JS, not a separate hand-written static imitation. Serve it over HTTP with SPA fallback. Netlify deploys both the static build and the function from this project.
+`dist/` is compiled HTML/CSS/JS, not a separate hand-written static imitation. Serve it over HTTP with SPA fallback. Vercel deploys both the static build and the function from this project.

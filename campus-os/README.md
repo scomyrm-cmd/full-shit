@@ -15,7 +15,7 @@ Demo credentials: `admin` / `admin`. They are not shown on the login page. This 
 
 ```bash
 npm run build       # Strict TypeScript check + production HTML/CSS/JS in dist/
-npm run preview     # Serve the production UI; AI requires Netlify or the dev API middleware
+npm run preview     # Serve the production UI; AI requires Vercel or the dev API middleware
 npm test            # Repository, analytics, privacy and server/API tests
 npm run check:i18n  # EN/FR/AR key parity and static translation usage audit
 npm run test:e2e    # Chromium browser workflows (install browser first)
@@ -36,7 +36,7 @@ For a new test environment: `npx playwright install --with-deps chromium`.
 - Eight settings categories; school details/logo; administrator name/role/avatar; regional date/time formats; notification toggles; private JSON backup.
 - English, French and Arabic translation files; immediate switching; full RTL layout; persistent light/dark/system themes.
 - Campus AI chat UI, multiple local conversations, deletion/clear controls, copy/retry, suggested prompts, privacy redaction and a measured report generator.
-- A real Netlify Function using Gemini `generateContent` and allowlisted function calling. No canned assistant responses or simulated successful API calls.
+- A real Vercel Function using Gemini `generateContent` and allowlisted function calling. No canned assistant responses or simulated successful API calls.
 
 ## Empty data and persistence
 
@@ -67,11 +67,11 @@ Campus AI → Report generator and Digital Absence → Reports calculate statist
 
 Attendance rate = `(present + late) / recorded attendance`. Unrecorded students are not counted as absent. Excused absences are reported separately. AI snapshot coverage is the latest 365 days; oversized snapshots are marked partial.
 
-## Netlify deployment
+## Vercel deployment
 
-`netlify.toml` sets the build command, publish directory, functions directory, Node version and SPA fallback. Deploy the project through Git or the Netlify CLI so both `dist/` and the function are deployed. Uploading only the static `dist` folder does not deploy the backend.
+Import the repository into Vercel and set the project Root Directory to `campus-os`. The checked-in `vercel.json` uses `npm ci`, `npm run build`, and `dist`; `api/ai.ts` is deployed as the `/api/ai` Node.js Serverless Function. Frontend routes fall back to `index.html`, while Vercel serves API functions independently.
 
-See `docs/AI_SETUP.md` for Gemini and verified-auth configuration, and `SECURITY.md` before handling real school data.
+Configure `GEMINI_API_KEY` and `GEMINI_MODEL` as server-side Vercel environment variables. For the existing demo-login workflow, also set `CAMPUS_AI_DEMO_CODE` (at least 8 characters); this is a shared demo password, not full authentication. Real administrator access additionally requires a real Supabase Auth session plus `SUPABASE_URL` and `SUPABASE_ANON_KEY`. See `docs/AI_SETUP.md` and `SECURITY.md` before handling real school data.
 
 ## Optional Supabase migration
 

@@ -12,7 +12,7 @@ Verified on 31 October 2026 in the delivery workspace.
 | Chromium end-to-end scenarios | **11 passed** |
 | Translation coverage | **559 keys × EN/FR/AR**, parity audit passed |
 | Dependency audit (`npm audit --audit-level=high`) | **0 vulnerabilities** at delivery |
-| Netlify handler esbuild bundle | Passed; safe unconfigured response |
+| Vercel handler esbuild bundle | Passed; safe unconfigured response |
 | Production-build browser/deep-link/lazy AI check | Passed; no runtime errors |
 | Provider-key scan of deliverable source | No exposed provider key found |
 
@@ -37,7 +37,7 @@ Each browser test also checks for uncaught page runtime errors. Test records exi
 ## Not claimed / not yet connected
 
 - **Live Gemini responses were not tested:** no replacement secret key or verified administrator session was configured. Tests explicitly mock the provider protocol, authentication responses, tool loop and errors; the running app never uses those mocks.
-- Netlify hosting was not deployed from this workspace. The function was bundled and exercised locally.
+- Vercel hosting was not deployed from this workspace. The function was bundled and exercised locally.
 - Supabase was not connected and the optional SQL migration was not applied to a live project.
 - Mobile checks use Chromium viewport emulation, not physical iOS/Android devices.
 - The temporary login is not production security. See `SECURITY.md`.
