@@ -12,10 +12,10 @@ export const getDemoCode=()=>{try{return sessionStorage.getItem(DEMO_KEY)||'';}c
 export const setDemoCode=(code:string)=>{try{sessionStorage.setItem(DEMO_KEY,code.trim());}catch{/* storage unavailable */}};
 export const clearDemoCode=()=>{try{sessionStorage.removeItem(DEMO_KEY);}catch{/* storage unavailable */}};
 export function accessHeaders():Record<string,string>|null{const token=getVerifiedAccessToken();if(token)return {Authorization:`Bearer ${token}`};const code=getDemoCode();return code?{'X-Campus-Demo-Code':code}:null;}
-export async function fetchAIStatus():Promise<AIStatus>{const response=await fetch('/api/campus-ai',{headers:accessHeaders()||{},signal:AbortSignal.timeout(8000)});if(!response.ok)throw new Error('network_error');return response.json();}
+export async function fetchAIStatus():Promise<AIStatus>{const response=await fetch('/api/ai',{headers:accessHeaders()||{},signal:AbortSignal.timeout(8000)});if(!response.ok)throw new Error('network_error');return response.json();}
 export async function requestAI(messages:{role:'user'|'assistant';content:string}[],language:string,snapshot:SchoolSnapshot,preferences:{demographics:boolean;itemDescriptions:boolean;activity:boolean}){
  const access=accessHeaders();if(!access)throw new Error('unauthorized');
- let response:Response;try{response=await fetch('/api/campus-ai',{method:'POST',headers:{'Content-Type':'application/json',...access},body:JSON.stringify({messages,language,snapshot,preferences}),signal:AbortSignal.timeout(65000)});}catch{throw new Error('network_error');}
+ let response:Response;try{response=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json',...access},body:JSON.stringify({messages,language,snapshot,preferences}),signal:AbortSignal.timeout(65000)});}catch{throw new Error('network_error');}
  let body:any;try{body=await response.json();}catch{throw new Error('invalid_response');}
  if(!response.ok)throw new Error(body?.error?.code||'server_error');if(typeof body.reply!=='string'||!body.reply.trim())throw new Error('invalid_response');return {reply:body.reply as string,tools:Array.isArray(body.tools)?body.tools.filter((v:unknown)=>typeof v==='string') as string[]:[]};
 }

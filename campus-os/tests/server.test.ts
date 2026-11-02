@@ -1,5 +1,5 @@
 import { describe,it,expect,beforeEach } from 'vitest';
-import { createCampusAIHandler } from '../netlify/functions/campus-ai.mts';
+import { createCampusAIHandler } from '../server/handler';
 import { resetRateLimits } from '../server/security';
 import { LocalAIContextAdapter } from '../src/data/aiAdapter';
 import { emptyData } from '../src/data/types';
@@ -7,11 +7,11 @@ import { defaultSettings } from '../src/data/settings';
 const env={GEMINI_API_KEY:'server-test-key',GEMINI_MODEL:'test-model',SUPABASE_URL:'https://test.supabase.co',SUPABASE_ANON_KEY:'public-test-key',SCHOOL_DATA_SOURCE:'local-sanitized'};
 const snapshot=new LocalAIContextAdapter(emptyData(),defaultSettings()).buildSnapshot();
 const body={messages:[{role:'user',content:'How many students are registered?'}],language:'en',snapshot,preferences:{demographics:false,itemDescriptions:false,activity:false}};
-const post=(payload:unknown=body,token='header.payload.signature')=>new Request('https://campus.test/api/campus-ai',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(payload)});
+const post=(payload:unknown=body,token='header.payload.signature')=>new Request('https://campus.test/api/ai',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(payload)});
 const authOK=async()=>new Response(JSON.stringify({id:'admin-id',app_metadata:{role:'administrator'}}),{status:200});
 beforeEach(()=>resetRateLimits());
 describe('server-side AI security and real provider protocol',()=>{
- it('reports setup state without exposing secrets',async()=>{const handler=createCampusAIHandler({},async()=>{throw Error('no network expected');});const response=await handler(new Request('https://campus.test/api/campus-ai'));expect(response.status).toBe(200);const json=await response.json();expect(json.ready).toBe(false);expect(JSON.stringify(json)).not.toContain('key');});
+ it('reports setup state without exposing secrets',async()=>{const handler=createCampusAIHandler({},async()=>{throw Error('no network expected');});const response=await handler(new Request('https://campus.test/api/ai'));expect(response.status).toBe(200);const json=await response.json();expect(json.ready).toBe(false);expect(JSON.stringify(json)).not.toContain('key');});
  it('rejects the front-end demo session before any provider call',async()=>{let calls=0;const handler=createCampusAIHandler(env,async()=>{calls++;return authOK();});const response=await handler(post(body,'admin'));expect(response.status).toBe(401);expect(calls).toBe(0);const secured=createCampusAIHandler({GEMINI_API_KEY:'x',GEMINI_MODEL:'x'},async()=>{calls++;return authOK();});const unconfigured=await secured(post());expect(unconfigured.status).toBe(503);expect((await unconfigured.json()).error.code).toBe('auth_not_configured');});
  it('rejects a verified non-administrator',async()=>{const handler=createCampusAIHandler(env,async()=>new Response(JSON.stringify({id:'user',app_metadata:{role:'student'},user_metadata:{role:'administrator'}})));const response=await handler(post());expect(response.status).toBe(403);});
  it('rejects expired or invalid tokens',async()=>{const handler=createCampusAIHandler(env,async()=>new Response('{}',{status:401}));expect((await handler(post())).status).toBe(401);});
@@ -27,9 +27,9 @@ describe('server-side AI security and real provider protocol',()=>{
 
 describe('private demo access code (interim, server-verified)',()=>{
  const demoEnv={GEMINI_API_KEY:'server-test-key',GEMINI_MODEL:'test-model',CAMPUS_AI_DEMO_CODE:'correct-horse-battery'};
- const demoPost=(code?:string)=>new Request('https://campus.test/api/campus-ai',{method:'POST',headers:{'Content-Type':'application/json',...(code?{'X-Campus-Demo-Code':code}:{})},body:JSON.stringify(body)});
+ const demoPost=(code?:string)=>new Request('https://campus.test/api/ai',{method:'POST',headers:{'Content-Type':'application/json',...(code?{'X-Campus-Demo-Code':code}:{})},body:JSON.stringify(body)});
  it('rejects a missing or wrong code before any provider call',async()=>{let calls=0;const handler=createCampusAIHandler(demoEnv,async()=>{calls++;return new Response('{}');});expect((await handler(demoPost())).status).toBe(401);expect((await handler(demoPost('wrong-code-value'))).status).toBe(401);expect(calls).toBe(0);});
  it('accepts the configured code and returns the Gemini reply',async()=>{const handler=createCampusAIHandler(demoEnv,async()=>new Response(JSON.stringify({candidates:[{content:{parts:[{text:'There are 0 students.'}]}}]})));const response=await handler(demoPost('correct-horse-battery'));expect(response.status).toBe(200);expect((await response.json()).reply).toContain('0 students');});
- it('reports demo status without exposing the code',async()=>{const handler=createCampusAIHandler(demoEnv,async()=>{throw Error('no network');});const json=await (await handler(new Request('https://campus.test/api/campus-ai',{headers:{'X-Campus-Demo-Code':'correct-horse-battery'}}))).json();expect(json.ready).toBe(true);expect(json.mode).toBe('demo');expect(JSON.stringify(json)).not.toContain('correct-horse');});
+ it('reports demo status without exposing the code',async()=>{const handler=createCampusAIHandler(demoEnv,async()=>{throw Error('no network');});const json=await (await handler(new Request('https://campus.test/api/ai',{headers:{'X-Campus-Demo-Code':'correct-horse-battery'}}))).json();expect(json.ready).toBe(true);expect(json.mode).toBe('demo');expect(JSON.stringify(json)).not.toContain('correct-horse');});
  it('ignores demo codes shorter than 8 characters',async()=>{const handler=createCampusAIHandler({...demoEnv,CAMPUS_AI_DEMO_CODE:'short'},async()=>new Response('{}'));expect((await handler(demoPost('short'))).status).toBe(503);});
 });
