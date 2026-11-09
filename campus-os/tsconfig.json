@@ -21,7 +21,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "types": [
-      "vite/client",
       "node"
     ]
   },
